@@ -4,42 +4,53 @@ var Route = Backbone.Model.extend({
 });
 
 var RouteView = Backbone.View.extend({
-	model: new Route(),
-	template: _.template("<li><%= name %> submitted by <%= user %></li>"),
+	tagName: "li",
+	template: _.template("<%= name %> submitted by <%= user %>"),
+	events: {},
 	render: function() {
 		this.$el.html(this.template(this.model.toJSON()));
+		//console.log("RouteView render");
 		return this;
 	}
 });
 
-var RouteList = Backbone.Collection.extend({model : Route});
+var RouteList = Backbone.Collection.extend({
+	model : Route,
+	localStorage: new Backbone.LocalStorage("werunthis-localstorage")
+});
 
-var RouteListView = Backbone.View.extend({
-	model: new RouteList(),
+var AppView = Backbone.View.extend({
 	initialize: function() {
 		this.collection.on('add', this.addOne, this);
+		this.collection.fetch(); //fires 'add' event
+		//console.log('initialize');
 	},
-	el: '#routes-list',
+	el: $("#container"),
+	events: {
+		'click #new-route-form button':'formSubmit'
+	},
 	addOne: function(route) {
 		var routeView = new RouteView({model: route});
-		this.$el.append(routeView.render().el);
+		this.$('#routes-list').append(routeView.render().el);
+		//console.log("addOne");
+	},
+
+	formSubmit: function(ev) {
+		ev.preventDefault();
+        var route = new Route({ name: $('#route-name-input').val(), user: $('#user-name-input').val() });
+        this.collection.create(route);
+        $('#route-name-input').val('');
+        $('#user-name-input').val('');
+        //console.log("formSubmit");
 	},
 	render: function() {
-		this.collection.forEach(this.addOne, this);
+
 	}
 });
 
 
 
 $(document).ready(function() {
-	var routeList = new RouteList();
-	var routeListView = new RouteListView({collection : routeList});
-
- 	$('#new-route-form').submit(function(ev) {
- 		ev.preventDefault();
-        var route = new Route({ name: $('#route-name-input').val(), user: $('#user-name-input').val() });
-        routeList.add(route);
-             
-   	});
+	var app = new AppView({collection : new RouteList()});
 
 });
