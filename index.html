@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>We Run This</title>
+  <link href = "style.css" rel="stylesheet">
 </head>
 <body>
 	<div id = "container">
@@ -11,11 +12,16 @@
 			<label>Route Name: </label><input id = "route-name-input" type = "text" />
 			<label>Your Name: </label><input id = "user-name-input" type = "text" />
 			<button class = "btn">Add to List!</button>
-			<hr>
 		</form>
+		<div id="map-canvas"></div>
+		<button onclick = "clearRoutes();">Clear Route</button>
+		<button onclick = "clearMarkers();">Clear Markers</button>
+		<hr>
+		
 
 		<ul id = "routes-list"></ul>
 	</div>
+
 </body>
 
 
@@ -26,6 +32,7 @@
 <script src="backbone.js"></script>
 <script src="backbone.localStorage.js"></script>
 <script src="application.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=drawing&sensor=true"></script>
 
 
 </html>

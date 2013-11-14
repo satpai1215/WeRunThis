@@ -1,4 +1,6 @@
 WeRunThis
 =========
 
-Discover Run Paths.  Anywhere.
+Discover Amazing Runs.  Anywhere.
+
+WeRunThis is built with Backbone.js
