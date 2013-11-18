@@ -8,18 +8,28 @@
 	<div id = "container">
 		<h1>We Run This!</h1>
 
+
 		<form id = "new-route-form">
+			<h2>Create a Route</h2>
 			<label>Route Name: </label><input id = "route-name-input" type = "text" />
 			<label>Your Name: </label><input id = "user-name-input" type = "text" />
 			<button class = "btn">Add to List!</button>
 		</form>
+
+		<div id="geocode-input">
+      		<input id="location-input" type="textbox" placeholder="Enter Location">
+      		<input type="button" value="Re-center Map" onclick="reCenterMap()">
+    	</div>
+
 		<div id="map-canvas"></div>
 		<button onclick = "clearRoutes();">Clear Route</button>
 		<button onclick = "clearMarkers();">Clear Markers</button>
 		<hr>
 		
 
-		<ul id = "routes-list"></ul>
+		<h2>Route List</h2>
+		<ul id = "routes-list">
+		</ul>
 	</div>
 
 </body>
@@ -32,7 +42,7 @@
 <script src="backbone.js"></script>
 <script src="backbone.localStorage.js"></script>
 <script src="application.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=drawing&sensor=true"></script>
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=drawing&sensor=false"></script>
 
 
 </html>

@@ -5,9 +5,15 @@ html, body {
 
 #container {
 	height: 100%;
+	width: 960px;
+	margin: 0 auto;
+}
+
+#container h1 {
+	text-align: center;
 }
 
  #map-canvas {
  	height: 50%;
- 	width: 70%;
+ 	width: 100%;
  }
