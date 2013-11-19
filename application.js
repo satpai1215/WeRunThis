@@ -29,10 +29,10 @@ var RouteView = Backbone.View.extend({
 		this.$el.html(this.template(route.toJSON()));
 
 		//create mapView
-		var mapView = new RouteMapView({ model: route.get('routeMap')});
+		//var mapView = new RouteMapView({ model: route.get('routeMap')});
 
 		//add map container to route-item via mapView.render()
-		this.$el.append(mapView.render().el);
+		//this.$el.append(mapView.render().el);
 
 		return this;
 	}
@@ -56,11 +56,11 @@ var AppView = Backbone.View.extend({
 		'click #new-route-form button':'formSubmit'
 	},
 	addOne: function(route) {
-
-		var mapObject = route.get('routeMap');
+		console.log(route);
+		//var mapObject = route.get('routeMap');
 		var routeView = new RouteView({model: route});
 		this.$('#routes-list').append(routeView.render().el);
-		newMap("map-" + mapObject.get('id'), mapObject.get('drawnPaths'), mapObject.get('markers'));
+		//newMap("map-" + mapObject.get('id'), mapObject.get('drawnPaths'), mapObject.get('markers'));
 		
 	},
 
@@ -70,8 +70,8 @@ var AppView = Backbone.View.extend({
 			var id = this.collection.length;
 			var newMapObject = new RouteMap({id: id, drawnPaths: polylines.slice(), markers: markers.slice()});
 
-			console.log(newMapObject);
-	        var route = new Route({ name: $('#route-name-input').val(), user: $('#user-name-input').val(), routeMap: newMapObject, id: id });
+			//need to convert newMapObject to JSON so it can be stored on local storage
+	        var route = new Route({ name: $('#route-name-input').val(), user: $('#user-name-input').val(), routeMap: newMapObject.toJSON(), id: id });
 
 	        this.collection.create(route); //triggers 'add' --> 'addOne'
 
@@ -90,6 +90,9 @@ var AppView = Backbone.View.extend({
 		});
 		
 		return this;
+	},
+	success: function() {
+		console.log("SUCCESS");
 	}
 });
 
@@ -104,7 +107,6 @@ function validateUserInput() {
 var RouteMap = Backbone.Model.extend({
 	defaults: function() {
 		return {
-			map: null,
 			drawnPaths: null,
 			markers: null,
 			id: null
@@ -245,9 +247,4 @@ $(document).ready(function() {
 
 	var app = new AppView({collection : new RouteList()});
 
-	console.log(localStorage.length);
-for (var i = 0; i < localStorage.length; i++) {
-    // do something with localStorage.getItem(localStorage.key(i));
-    console.log(localStorage.getItem(localStorage.key(i)));
-}	
 });
