@@ -56,8 +56,12 @@ var AppView = Backbone.View.extend({
 	formSubmit: function(ev) {
 		ev.preventDefault();
 		var id = this.collection.length;
-		var newMapObject = newMap("map-canvas2", polylines);
-        var route = new Route({ name: $('#route-name-input').val(), user: $('#user-name-input').val(), map: newMapObject.map, id: id });
+
+		var newMapObject = new RouteMap();
+		newMapObject.set(newMap("map-canvas2", polylines, markers));
+		$("#map-canvas2").fadeIn(1000);
+        var route = new Route({ name: $('#route-name-input').val(), user: $('#user-name-input').val(), map: newMapObject, id: id });
+        
         this.collection.create(route);
         $('#route-name-input').val('');
         $('#user-name-input').val('');
@@ -75,6 +79,7 @@ var RouteMap = Backbone.Model.extend({
 	defaults: function() {
 		return {
 			map: null,
+			drawnRoutes: null,
 			markers: new Array(),
 			id: null
 		}
@@ -108,35 +113,49 @@ function mapInitialize(id) {
 	  };
 	map = new google.maps.Map(document.getElementById(id), mapOptions);
 	  //console.log(map.controls);
-		drawingManagerGlobal = new google.maps.drawing.DrawingManager({
-			  drawingMode: google.maps.drawing.OverlayType.POLYLINE,
-			  drawingControl: true,
-			  drawingControlOptions: {
-			    position: google.maps.ControlPosition.TOP_CENTER,
-			    drawingModes: [
-			      google.maps.drawing.OverlayType.POLYLINE,
-			      google.maps.drawing.OverlayType.MARKER
-			    ]
-			  },
-			  polylineOptions: {
-			    editable: true,
-			    draggable: true,
-			    geodesic: true
-			  }
-			});
+	drawingManagerGlobal = new google.maps.drawing.DrawingManager({
+		drawingMode: google.maps.drawing.OverlayType.POLYLINE,
+		drawingControl: false,
+		drawingControlOptions: {
+		position: google.maps.ControlPosition.TOP_CENTER,
+			drawingModes: [
+				google.maps.drawing.OverlayType.POLYLINE,
+				google.maps.drawing.OverlayType.MARKER
+			]
+		},
+		polylineOptions: {
+			editable: true,
+			draggable: true,
+			geodesic: true
+		}
+	});
 		 
-		drawingManagerGlobal.setMap(map);
-		var coordinates = [];
-			//After creating 'drawingManager' object in if block 
-	  	google.maps.event.addListener(drawingManagerGlobal, 'polylinecomplete', function(PL) {
-	        polylines.push(PL);
-	  	});
+	drawingManagerGlobal.setMap(map);
 
+  	google.maps.event.addListener(drawingManagerGlobal, 'polylinecomplete', function(pl) {
+   
+        if(polylines.length == 0) {
+        	polylines.push(pl);
+        	//put marker at starting point
+        	startPoint = new google.maps.Marker({
+				draggable: false,
+				map: map,
+				position: pl.getPath().getArray()[0],
+				title: "Starting Point"
+			});
+			markers.push(startPoint);
+			drawingManagerGlobal.setDrawingMode(null); //don't allow user to draw anymore after route is added
+        } else {
+        	pl.setMap(null);
+        	$("#notice").text("You can only create one run path per route.  Please clear the previous path before adding another.");
+        	$("#notice").fadeIn(1000).delay(3000).fadeOut(1000);
+        }
+  	});
 
 	return map;
 }
 
-function newMap(id, overlays) {
+function newMap(id, paths, markers) {
 	var mapOptions = {
 	    zoom: 13,
 	    center: new google.maps.LatLng(37.7833, -122.4167),
@@ -145,7 +164,7 @@ function newMap(id, overlays) {
 	
 	map = new google.maps.Map(document.getElementById(id), mapOptions);
 	var savedRoute;
-	overlays.forEach(function(path) {
+	paths.forEach(function(path) {
 			savedRoute = new google.maps.Polyline({
 			path: path.getPath(),
 			editable: false,
@@ -153,8 +172,16 @@ function newMap(id, overlays) {
 			map: map
 		});
 	});
+	markers.forEach(function(marker) {
+			startPoint = new google.maps.Marker({
+			draggable: false,
+			map: map,
+			position: marker.getPosition(),
+			title: "Starting Point"
+		});
+	});
 
-	return {map: map};
+	return {map: map, drawnPaths: polylines, markers: markers};;
 }
 
 
@@ -164,26 +191,26 @@ function reCenterMap() {
   geocoder.geocode( { 'address': location}, function(results, status) {
     if (status == google.maps.GeocoderStatus.OK) {
       map.setCenter(results[0].geometry.location);
+
     } else {
       alert('Geocode was not successful for the following reason: ' + status);
     }
   });
 }
 
-function clearMarkers() {
+function clearMap() {
 	while(markers[0])
 	{
 		markers.pop().setMap(null);
 	}
-}
-
-
-function clearRoutes() {
 	while(polylines[0])
 	{
 		polylines.pop().setMap(null);
 	}
+
+	drawingManagerGlobal.setDrawingMode(google.maps.drawing.OverlayType.POLYLINE);
 }
+
 
 /********* END OF MAPS MODELS, VIEWS, COLLECTIONS *********/
 

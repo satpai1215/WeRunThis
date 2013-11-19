@@ -16,21 +16,30 @@
 			<button class = "btn">Add to List!</button>
 		</form>
 
-		<div id="geocode-input">
-      		<input id="location-input" type="textbox" placeholder="Enter Location">
-      		<input type="button" value="Re-center Map" onclick="reCenterMap()">
-    	</div>
+		<div id="map-container">
+			<div id="geocode-input">
+				<label>Location: </label>
+				<input id="location-input" type="textbox" placeholder="Enter Location">
+				<input type="button" value="Re-center Map" onclick="reCenterMap()">
+	      		
+	    	</div>
+	    	<div id = "notice-container"><div id = "notice"></div></div>
+	    	
 
-		<div id="map-canvas" class = "map-canvas"></div>
-		<button onclick = "clearRoutes();">Clear Route</button>
-		<button onclick = "clearMarkers();">Clear Markers</button>
-		<hr>
+			<div id="map-canvas" class = "map-canvas"></div>
+
+			<div id = "route-clear-btns">
+				<button onclick = "clearMap();">Clear Run Path</button>
+			</div>
+
+		</div>
 		
-
-		<h2>Route List</h2>
-		<ul id = "routes-list">
-		</ul>
-		<div id="map-canvas2" class = "map-canvas"></div>
+		<div id = "route-list-container">
+			<h2>Route List</h2>
+			<ul id = "routes-list">
+			</ul>
+			<div id="map-canvas2" class = "map-canvas"></div>
+		</div>
 	</div>
 
 </body>

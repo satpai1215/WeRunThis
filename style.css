@@ -13,7 +13,60 @@ html, body {
 	text-align: center;
 }
 
+#map-container {
+	height: 70%;
+	margin-bottom: 75px;
+	position: relative;
+}
+/*	#geocode-input {
+		display: block;
+		position: absolute;
+		right: 5px;
+		top: 200px;
+		z-index: 1000000;
+
+		background: white;
+		text-align: center;
+		padding: 5px;
+	}
+		#location-input {
+			width: 105px;
+		}*/
+
  .map-canvas {
- 	height: 50%;
+ 	height: 100%;
  	width: 100%;
+ }
+
+ #notice-container {
+ 	position: absolute;
+ 	text-align: center;
+ 	width: 100%;
+ 	bottom: 10px;
+ 	z-index: 1000000;
+ }
+ 	#notice {
+ 		display: none;
+	 	background: black;
+	 	padding: 5px 10px;
+	 	color: white;
+	 	font-family: Arial;
+ 	}
+
+#route-clear-btns {
+	position: relative;
+	top: -75px;
+}
+	#route-clear-btns button {
+		font-weight: bold;
+		background: white;
+	}
+	#route-clear-btns button:hover {
+		background: gray;
+	}
+
+
+ #route-list-container {
+ 	display: inline;
+ 	height: 30%;
  }
