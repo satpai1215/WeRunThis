@@ -56,7 +56,7 @@ var AppView = Backbone.View.extend({
 	formSubmit: function(ev) {
 		ev.preventDefault();
 		var id = this.collection.length;
-		var newMapObject = newMap("map-canvas2", polylines[0]);
+		var newMapObject = newMap("map-canvas2", polylines);
         var route = new Route({ name: $('#route-name-input').val(), user: $('#user-name-input').val(), map: newMapObject.map, id: id });
         this.collection.create(route);
         $('#route-name-input').val('');
@@ -85,8 +85,7 @@ var RouteMapView = Backbone.View.extend({
 	className: "route-item-map",
 	events: {},
 	render: function() {
-		
-		newMap("map-canvas2", polyline[0]);
+		//newMap("map-canvas2", polylines[0]);
 		//console.log("RouteView render");
 		return this;
 	}
@@ -137,8 +136,7 @@ function mapInitialize(id) {
 	return map;
 }
 
-function newMap(id, polyline) {
-
+function newMap(id, overlays) {
 	var mapOptions = {
 	    zoom: 13,
 	    center: new google.maps.LatLng(37.7833, -122.4167),
@@ -146,17 +144,18 @@ function newMap(id, polyline) {
 	  };
 	
 	map = new google.maps.Map(document.getElementById(id), mapOptions);
-	var savedRoute = new google.maps.Polyline({
-		path: polyline.getPath(),
-		editable: false,
-		draggable: false,
-		map: map
+	var savedRoute;
+	overlays.forEach(function(path) {
+			savedRoute = new google.maps.Polyline({
+			path: path.getPath(),
+			editable: false,
+			draggable: false,
+			map: map
+		});
 	});
 
-
-	return {map: map, overlays: savedRoute};
-
-  }
+	return {map: map};
+}
 
 
 
@@ -180,9 +179,9 @@ function clearMarkers() {
 
 
 function clearRoutes() {
-	while(mapObjects[0])
+	while(polylines[0])
 	{
-		mapObjects.pop().setMap(null);
+		polylines.pop().setMap(null);
 	}
 }
 
