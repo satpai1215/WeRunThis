@@ -10,3 +10,4 @@ Current TO DO:
 - Allow adding markers along drawn paths
 - Calculate distances from drawn paths
 - Build search functionality of routes
+- CSS3 Styling

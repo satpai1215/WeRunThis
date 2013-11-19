@@ -13,9 +13,38 @@ html, body {
 	text-align: center;
 }
 
+#user-input-container {
+	float: left;
+	width: 20%;
+}
+#user-input-container h2 {
+	margin-top: 0px;
+	margin-bottom: 15px;
+}
+#user-input-container input {
+	margin-bottom: 15px;
+}
+
+#draw-instructions {
+	margin-top: 30px;
+	padding-left: 0px;
+}
+	#draw-instructions h4 {
+		margin-bottom: 10px;
+	}
+	.instruction-item {
+		margin-left: 20px;
+		margin-right: 5px;
+		margin-bottom: 10px;
+
+		font-size: 0.9em;
+	}
+
 .map-container {
+
+ 	float: right;
 	height: 70%;
-	margin-bottom: 75px;
+	width: 80%;
 	position: relative;
 }
 /*	#geocode-input {
@@ -28,10 +57,10 @@ html, body {
 		background: white;
 		text-align: center;
 		padding: 5px;
-	}
+	}*/
 		#location-input {
-			width: 105px;
-		}*/
+			width: 50%;
+		}
 
  .map-canvas {
  	height: 100%;
@@ -55,7 +84,7 @@ html, body {
 
 #route-clear-btns {
 	position: relative;
-	top: -75px;
+	top: -40px;
 }
 	#route-clear-btns button {
 		font-weight: bold;
@@ -67,7 +96,8 @@ html, body {
 
 
  #route-list-container {
- 	display: inline;
+ 	clear: both;
+ 	padding-top: 20px;
  	height: 30%;
  }
 

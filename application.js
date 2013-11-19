@@ -29,10 +29,10 @@ var RouteView = Backbone.View.extend({
 		this.$el.html(this.template(route.toJSON()));
 
 		//create mapView
-		//var mapView = new RouteMapView({ model: route.get('routeMap')});
+		var mapView = new RouteMapView({ model: route.get('routeMap')});
 
 		//add map container to route-item via mapView.render()
-		//this.$el.append(mapView.render().el);
+		this.$el.append(mapView.render().el);
 
 		return this;
 	}
@@ -56,12 +56,11 @@ var AppView = Backbone.View.extend({
 		'click #new-route-form button':'formSubmit'
 	},
 	addOne: function(route) {
-		console.log(route);
-		//var mapObject = route.get('routeMap');
 		var routeView = new RouteView({model: route});
 		this.$('#routes-list').append(routeView.render().el);
-		//newMap("map-" + mapObject.get('id'), mapObject.get('drawnPaths'), mapObject.get('markers'));
-		
+
+		var mapObject = route.get('routeMap');
+		newMap("map-" + mapObject.get('id'), mapObject.get('drawnPaths'), mapObject.get('markers'));
 	},
 
 	formSubmit: function(ev) {
@@ -70,8 +69,7 @@ var AppView = Backbone.View.extend({
 			var id = this.collection.length;
 			var newMapObject = new RouteMap({id: id, drawnPaths: polylines.slice(), markers: markers.slice()});
 
-			//need to convert newMapObject to JSON so it can be stored on local storage
-	        var route = new Route({ name: $('#route-name-input').val(), user: $('#user-name-input').val(), routeMap: newMapObject.toJSON(), id: id });
+	        var route = new Route({ name: $('#route-name-input').val(), user: $('#user-name-input').val(), routeMap: newMapObject, id: id });
 
 	        this.collection.create(route); //triggers 'add' --> 'addOne'
 

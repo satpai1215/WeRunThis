@@ -8,21 +8,33 @@
 	<div id = "container">
 		<h1>We Run This!</h1>
 
-
-		<form id = "new-route-form">
+		<div id = "user-input-container">
 			<h2>Create a Route</h2>
-			<label>Route Name: </label><input id = "route-name-input" type = "text" />
-			<label>Your Name: </label><input id = "user-name-input" type = "text" />
-			<button class = "btn">Add to List!</button>
-		</form>
+			<div id="geocode-input">
+				<label>Location:</label><br/>
+				<input id="location-input" type="textbox" value="San Francisco">
+				<input type="button" value="Center Map" onclick="reCenterMap()">
+	    	</div>
+			<form id = "new-route-form">
+				<label>Route Name:</label><br/><input id = "route-name-input" type = "text" /><br/>
+				<label>Your Name:</label><br/><input id = "user-name-input" type = "text" /><br/>
+				<button class = "add-route-btn">Add to List!</button>
+			</form>
+
+			<ol id = "draw-instructions">
+				<h4>To Draw a Run Route:</h4>
+				<li class = "instruction-item">Click the cursor on the starting point</li>
+				<li class = "instruction-item">Continue clicking along the run route.</li>
+				<li class = "instruction-item">When you are finished, either double click or if you 
+					are making a loop, just re-click on the starting point.</li>
+				<li class = "instruction-item">Click the "Clear Run Path" button to clear the map and try again.</li>
+			</ol>
+
+	    </div>
+
 
 		<div class="map-container">
-			<div id="geocode-input">
-				<label>Location: </label>
-				<input id="location-input" type="textbox" placeholder="Enter Location">
-				<input type="button" value="Re-center Map" onclick="reCenterMap()">
-	      		
-	    	</div>
+			
 	    	<div id = "notice-container"><div id = "notice"></div></div>
 	    	
 
