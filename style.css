@@ -13,7 +13,7 @@ html, body {
 	text-align: center;
 }
 
-#map-container {
+.map-container {
 	height: 70%;
 	margin-bottom: 75px;
 	position: relative;
@@ -69,4 +69,8 @@ html, body {
  #route-list-container {
  	display: inline;
  	height: 30%;
+ }
+
+ .route-item-map {
+ 	height: 400px;
  }

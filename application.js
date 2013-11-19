@@ -5,7 +5,7 @@ var Route = Backbone.Model.extend({
 		return {
 			name: 'No Name Entered',
 			user: 'Unknown',
-			map: null,
+			routeMap: null,
 			id: null
 		};
 	},
@@ -22,11 +22,18 @@ var RouteView = Backbone.View.extend({
 	template: _.template("<%= name %> submitted by <%= user %> <br/>"),
 	events: {},
 	render: function() {
-		this.$el.html(this.template(this.model.toJSON()));
-		var mapView = new RouteMapView({map: this.model.map});
-		mapView.render();
-		this.$el.append(mapView.el);
-		//console.log("RouteView render");
+		var route = this.model.toJSON();
+		var id = route.id;
+
+		//render route info
+		this.$el.html(this.template(route));
+
+		//create mapView
+		var mapView = new RouteMapView({ model: new RouteMap(route.routeMap)});
+
+		//add map container to route-item via mapView.render()
+		this.$el.append(mapView.render().el);
+
 		return this;
 	}
 });
@@ -48,8 +55,12 @@ var AppView = Backbone.View.extend({
 		'click #new-route-form button':'formSubmit'
 	},
 	addOne: function(route) {
+		var newRoute = route.toJSON();
 		var routeView = new RouteView({model: route});
 		this.$('#routes-list').append(routeView.render().el);
+
+		var mapObject = newRoute.routeMap.toJSON();
+		newMap("map-" + mapObject.id, mapObject.drawnPaths, mapObject.markers);
 		//console.log("addOne");
 	},
 
@@ -57,14 +68,15 @@ var AppView = Backbone.View.extend({
 		ev.preventDefault();
 		var id = this.collection.length;
 
-		var newMapObject = new RouteMap();
-		newMapObject.set(newMap("map-canvas2", polylines, markers));
-		$("#map-canvas2").fadeIn(1000);
-        var route = new Route({ name: $('#route-name-input').val(), user: $('#user-name-input').val(), map: newMapObject, id: id });
+		var newMapObject = new RouteMap({id: id, drawnPaths: polylines, markers: markers});
+
+        var route = new Route({ name: $('#route-name-input').val(), user: $('#user-name-input').val(), routeMap: newMapObject, id: id });
         
-        this.collection.create(route);
+        this.collection.create(route); //triggers 'add' --> 'addOne'
+
         $('#route-name-input').val('');
         $('#user-name-input').val('');
+        clearMap();
 	},
 	render: function() {
 		return this;
@@ -79,7 +91,7 @@ var RouteMap = Backbone.Model.extend({
 	defaults: function() {
 		return {
 			map: null,
-			drawnRoutes: null,
+			drawnPaths: null,
 			markers: new Array(),
 			id: null
 		}
@@ -89,9 +101,9 @@ var RouteMap = Backbone.Model.extend({
 var RouteMapView = Backbone.View.extend({
 	className: "route-item-map",
 	events: {},
+	template: _.template("<div id = 'map-<%= id %>' class = 'map-canvas'></div>"),
 	render: function() {
-		//newMap("map-canvas2", polylines[0]);
-		//console.log("RouteView render");
+		this.$el.html(this.template(this.model.toJSON()));
 		return this;
 	}
 });
@@ -181,7 +193,7 @@ function newMap(id, paths, markers) {
 		});
 	});
 
-	return {map: map, drawnPaths: polylines, markers: markers};;
+	return map;
 }
 
 
