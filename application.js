@@ -22,14 +22,14 @@ var RouteView = Backbone.View.extend({
 	template: _.template("<%= name %> submitted by <%= user %> <br/>"),
 	events: {},
 	render: function() {
-		var route = this.model.toJSON();
-		var id = route.id;
+		var route = this.model;
+		var id = route.get('id');
 
 		//render route info
-		this.$el.html(this.template(route));
+		this.$el.html(this.template(route.toJSON()));
 
 		//create mapView
-		var mapView = new RouteMapView({ model: new RouteMap(route.routeMap)});
+		var mapView = new RouteMapView({ model: route.get('routeMap')});
 
 		//add map container to route-item via mapView.render()
 		this.$el.append(mapView.render().el);
@@ -47,41 +47,55 @@ var AppView = Backbone.View.extend({
 	initialize: function() {
 		mapInitialize("map-canvas");
 		this.collection.on('add', this.addOne, this);
+		//this.collection.on('add', this.render, this);
 		this.collection.fetch(); //fires 'add' event
-		//console.log('initialize');
+		
 	},
 	el: $("#container"),
 	events: {
 		'click #new-route-form button':'formSubmit'
 	},
 	addOne: function(route) {
-		var newRoute = route.toJSON();
+
+		var mapObject = route.get('routeMap');
 		var routeView = new RouteView({model: route});
 		this.$('#routes-list').append(routeView.render().el);
-
-		var mapObject = newRoute.routeMap.toJSON();
-		newMap("map-" + mapObject.id, mapObject.drawnPaths, mapObject.markers);
-		//console.log("addOne");
+		newMap("map-" + mapObject.get('id'), mapObject.get('drawnPaths'), mapObject.get('markers'));
+		
 	},
 
 	formSubmit: function(ev) {
 		ev.preventDefault();
-		var id = this.collection.length;
+		if(validateUserInput()) {
+			var id = this.collection.length;
+			var newMapObject = new RouteMap({id: id, drawnPaths: polylines.slice(), markers: markers.slice()});
 
-		var newMapObject = new RouteMap({id: id, drawnPaths: polylines, markers: markers});
+			console.log(newMapObject);
+	        var route = new Route({ name: $('#route-name-input').val(), user: $('#user-name-input').val(), routeMap: newMapObject, id: id });
 
-        var route = new Route({ name: $('#route-name-input').val(), user: $('#user-name-input').val(), routeMap: newMapObject, id: id });
-        
-        this.collection.create(route); //triggers 'add' --> 'addOne'
+	        this.collection.create(route); //triggers 'add' --> 'addOne'
 
-        $('#route-name-input').val('');
-        $('#user-name-input').val('');
-        clearMap();
+	        $('#route-name-input').val('');
+	        $('#user-name-input').val('');
+	        clearMap();
+	    }
+	    else {
+	    	$("#notice").text("You must fill in all of the route information and there must be a route drawn on the map before submitting.");
+        	$("#notice").fadeIn(1000).delay(3000).fadeOut(1000);
+	    }
 	},
 	render: function() {
+		this.collection.each(function(route) {
+			console.log(route);
+		});
+		
 		return this;
 	}
 });
+
+function validateUserInput() {
+	return ($('#route-name-input').val() && $('#user-name-input').val() && markers.length && polylines.length);
+}
 
 /********* END OF ROUTES MODELS, VIEWS, COLLECTIONS *********/
 
@@ -92,7 +106,7 @@ var RouteMap = Backbone.Model.extend({
 		return {
 			map: null,
 			drawnPaths: null,
-			markers: new Array(),
+			markers: null,
 			id: null
 		}
 	}
@@ -220,7 +234,7 @@ function clearMap() {
 		polylines.pop().setMap(null);
 	}
 
-	drawingManagerGlobal.setDrawingMode(google.maps.drawing.OverlayType.POLYLINE);
+	mapInitialize('map-canvas');
 }
 
 
@@ -231,4 +245,9 @@ $(document).ready(function() {
 
 	var app = new AppView({collection : new RouteList()});
 
+	console.log(localStorage.length);
+for (var i = 0; i < localStorage.length; i++) {
+    // do something with localStorage.getItem(localStorage.key(i));
+    console.log(localStorage.getItem(localStorage.key(i)));
+}	
 });
