@@ -13,7 +13,7 @@ html, body {
 	text-align: center;
 }
 
- #map-canvas {
+ .map-canvas {
  	height: 50%;
  	width: 100%;
  }
