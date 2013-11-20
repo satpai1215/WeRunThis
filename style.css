@@ -1,3 +1,12 @@
+.italic {
+	font-style: italic;
+}
+
+.bold {
+	font-weight: bold;
+}
+
+
 html, body {
 	width: 100%;
 	height: 100%;
@@ -113,8 +122,10 @@ html, body {
 
  .route-item {
  	list-style-type: none;
+ 	border-bottom: 1px solid black;
+ 	margin-bottom: 10px;
  }
 
  .route-item-map {
  	height: 400px;
- }
+ 	margin: 10px 0px; }

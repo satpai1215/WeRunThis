@@ -19,7 +19,7 @@ var Route = Backbone.Model.extend({
 var RouteView = Backbone.View.extend({
 	tagName: "li",
 	className: "route-item",
-	template: _.template("<%= name %> submitted by <%= user %> <br/>"),
+	template: _.template('<span class = "bold">"<%= name %>"</span> submitted by <span class = "italic"><%= user %></span> <br/>'),
 	events: {},
 	render: function() {
 		var route = this.model;
