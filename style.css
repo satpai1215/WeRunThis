@@ -101,6 +101,20 @@ html, body {
  	height: 30%;
  }
 
+ #route-list {
+ 	border: 1px solid gray;
+ 	border-radius: 5px;
+ 	box-shadow: 0px 2px 5px 0px #000;
+		-moz-box-shadow: 0px 2px 5px 0px #000;
+		-webkit-box-shadow: 0px 2px 5px 0px #000;
+ 	min-height: 50px;
+ 	padding: 5px;
+ }
+
+ .route-item {
+ 	list-style-type: none;
+ }
+
  .route-item-map {
  	height: 400px;
  }

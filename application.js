@@ -57,9 +57,10 @@ var AppView = Backbone.View.extend({
 	},
 	addOne: function(route) {
 		var routeView = new RouteView({model: route});
-		this.$('#routes-list').append(routeView.render().el);
+		this.$('#route-list').append(routeView.render().el);
 
 		var mapObject = route.get('routeMap');
+		console.log(mapObject.get('drawnPaths'));
 		newMap("map-" + mapObject.get('id'), mapObject.get('drawnPaths'), mapObject.get('markers'));
 	},
 
@@ -184,7 +185,7 @@ function mapInitialize(id) {
 function newMap(id, paths, markers) {
 	var mapOptions = {
 	    zoom: 13,
-	    center: new google.maps.LatLng(37.7833, -122.4167),
+	    center: markers[0].getPosition(),
 	    mapTypeId: google.maps.MapTypeId.ROADMAP
 	  };
 	
